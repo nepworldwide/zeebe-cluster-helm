@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "zeebe-cluster.names.gateway" . }}
+  name: {{ include "zeebe-cluster.names.gateway-operate" . }}
   labels:
-    {{- include "zeebe-cluster.labels.gateway" . | nindent 4 }}
+    {{- include "zeebe-cluster.labels.gateway-operate" . | nindent 4 }}
   annotations:
       {{- range $key, $value := .Values.annotations }}
       {{ $key }}: {{ $value | quote }}
       {{- end }}
 spec:
-  replicas: {{ .Values.gateway.replicas  }}
+  replicas: {{ .Values.gatewayOperate.replicas  }}
   selector:
     matchLabels:
-      {{- include "zeebe-cluster.labels.gateway" . | nindent 6 }}
+      {{- include "zeebe-cluster.labels.gateway-operate" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "zeebe-cluster.labels.gateway" . | nindent 8 }}
-        {{- if .Values.gateway.podLabels }}
-        {{- toYaml .Values.gateway.podLabels | nindent 8 }}
+        {{- include "zeebe-cluster.labels.gateway-operate" . | nindent 8 }}
+        {{- if .Values.gatewayOperate.podLabels }}
+        {{- toYaml .Values.gatewayOperate.podLabels | nindent 8 }}
         {{- end }}
       annotations:
-        {{- range $key, $value := .Values.gateway.podAnnotations }}
+        {{- range $key, $value := .Values.gatewayOperate.podAnnotations }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     spec:
@@ -46,7 +46,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: ZEEBE_LOG_LEVEL
-              value: {{ .Values.gateway.logLevel | quote }}
+              value: {{ .Values.gatewayOperate.logLevel | quote }}
             - name: JAVA_TOOL_OPTIONS
               value: {{ .Values.JavaOpts | quote }}
             - name: ZEEBE_GATEWAY_CLUSTER_CONTACTPOINT
@@ -65,17 +65,17 @@ spec:
               value: 0.0.0.0
             - name: ZEEBE_GATEWAY_MONITORING_PORT
               value: {{  .Values.serviceHttpPort | quote }}
-            {{- if .Values.gateway.env }}
-            {{ toYaml .Values.gateway.env | indent 12 | trim }}
+            {{- if .Values.gatewayOperate.env }}
+            {{ toYaml .Values.gatewayOperate.env | indent 12 | trim }}
             {{- end }}
           volumeMounts:
-            {{- if .Values.gateway.log4j2 }}
+            {{- if .Values.gatewayOperate.log4j2 }}
             - name: config
               mountPath: /usr/local/zeebe/config/log4j2.xml
               subPath: gateway-log4j2.xml
             {{- end }}
-            {{- if .Values.gateway.volumeMounts }}
-            {{- toYaml .Values.gateway.volumeMounts | nindent 12 }}
+            {{- if .Values.gatewayOperate.volumeMounts }}
+            {{- toYaml .Values.gatewayOperate.volumeMounts | nindent 12 }}
             {{- end }}
           securityContext:
             {{ toYaml .Values.podSecurityContext | indent 12 | trim }}
@@ -84,27 +84,27 @@ spec:
               port: {{ default "gateway" .Values.serviceGatewayName  }}
             initialDelaySeconds: 20
             periodSeconds: 5
-          {{- if .Values.gateway.resources}}
+          {{- if .Values.gatewayOperate.resources}}
           resources:
-            {{- toYaml .Values.gateway.resources | nindent 12 }}
+            {{- toYaml .Values.gatewayOperate.resources | nindent 12 }}
           {{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ include "zeebe-cluster.fullname" . }}
             defaultMode: 0744
-        {{- if .Values.gateway.volumes }}
-        {{- toYaml .Values.gateway.volumes | nindent 8 }}
+        {{- if .Values.gatewayOperate.volumes }}
+        {{- toYaml .Values.gatewayOperate.volumes | nindent 8 }}
         {{- end }}
-{{- with .Values.gateway.nodeSelector }}
+{{- with .Values.gatewayOperate.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
 {{- end }}
-{{- with .Values.gateway.affinity }}
+{{- with .Values.gatewayOperate.affinity }}
       affinity:
 {{ toYaml . | indent 8 }}
 {{- end }}
-{{- with .Values.gateway.tolerations }}
+{{- with .Values.gatewayOperate.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
 {{- end }}

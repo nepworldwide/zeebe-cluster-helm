@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "zeebe-cluster.names.gateway-operate" . }}
+  labels:
+    {{- include "zeebe-cluster.labels.gateway-operate" . | nindent 4 }}
+  annotations:
+    {{- toYaml  .Values.annotations | nindent 4 }}
+spec:
+  selector:
+    {{- include "zeebe-cluster.labels.gateway-operate" . | nindent 6 }}
+  type: {{ default "ClusterIP" .Values.gatewayOperate.serviceType }}
+  ports:
+    - port: {{ .Values.serviceHttpPort }}
+      protocol: TCP
+      name: {{ default "http" .Values.serviceHttpName  }}
+      {{- if .Values.gatewayOperate.serviceNodePortHttp }}
+      nodePort: {{ .Values.gatewayOperate.serviceNodePortHttp }}
+      {{- end }}
+    - port: {{ .Values.serviceGatewayPort }}
+      protocol: TCP
+      name: {{ default "gateway" .Values.serviceGatewayName }}
+      {{- if .Values.gatewayOperate.serviceNodePortGateway }}
+      nodePort: {{ .Values.gatewayOperate.serviceNodePortGateway }}
+      {{- end }}

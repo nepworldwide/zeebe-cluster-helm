@@ -5,16 +5,16 @@ name: zeebe-cluster-helm
 type: application
 version: 0.0.209
 icon: https://zeebe.io/img/zeebe-logo.png
-dependencies:
-- name: elasticsearch
-  repository: "https://helm.elastic.co"
-  version: 7.5.1
-  condition: "elasticsearch.enabled"
-- name: kibana
-  repository: "https://helm.elastic.co" 
-  version: 7.5.1
-  condition: "kibana.enabled"
-- name: prometheus
-  repository: "https://prometheus-community.github.io/helm-charts"
-  version: 12.0.1
-  condition: "prometheus.enabled"
+# dependencies:
+# - name: elasticsearch
+#   repository: "https://helm.elastic.co"
+#   version: 7.5.1
+#   condition: "elasticsearch.enabled"
+# - name: kibana
+#   repository: "https://helm.elastic.co" 
+#   version: 7.5.1
+#   condition: "kibana.enabled"
+# - name: prometheus
+#   repository: "https://prometheus-community.github.io/helm-charts"
+#   version: 12.0.1
+#   condition: "prometheus.enabled"

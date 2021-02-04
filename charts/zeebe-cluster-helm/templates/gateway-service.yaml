@@ -9,10 +9,17 @@ metadata:
 spec:
   selector:
     {{- include "zeebe-cluster.labels.gateway" . | nindent 6 }}
+  type: {{ default "ClusterIP" .Values.gateway.serviceType }}
   ports:
     - port: {{ .Values.serviceHttpPort }}
       protocol: TCP
       name: {{ default "http" .Values.serviceHttpName  }}
+      {{- if .Values.gateway.serviceNodePortHttp }}
+      nodePort: {{ .Values.gateway.serviceNodePortHttp }}
+      {{- end }}
     - port: {{ .Values.serviceGatewayPort }}
       protocol: TCP
       name: {{ default "gateway" .Values.serviceGatewayName }}
+      {{- if .Values.gateway.serviceNodePortGateway }}
+      nodePort: {{ .Values.gateway.serviceNodePortGateway }}
+      {{- end }}

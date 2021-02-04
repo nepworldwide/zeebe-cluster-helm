@@ -54,6 +54,11 @@ app.kubernetes.io/component: broker
 app.kubernetes.io/component: gateway
 {{- end -}}
 
+{{- define "zeebe-cluster.labels.gateway-operate" -}}
+{{- template "zeebe-cluster.labels" . }}
+app.kubernetes.io/component: gateway-operate
+{{- end -}}
+
 {{/*
 Common names
 */}}
@@ -71,4 +76,12 @@ Creates a valid DNS name for the gateway
 {{- define "zeebe-cluster.names.gateway" -}}
 {{- $name := default .Release.Name (tpl .Values.global.zeebe .) -}}
 {{- printf "%s-gateway" $name | trunc 63 | trimSuffix "-" | quote -}}
+{{- end -}}
+
+{{/*
+Creates a valid DNS name for the gateway-operate
+*/}}
+{{- define "zeebe-cluster.names.gateway-operate" -}}
+{{- $name := default .Release.Name (tpl .Values.global.zeebe .) -}}
+{{- printf "%s-gateway-operate" $name | trunc 63 | trimSuffix "-" | quote -}}
 {{- end -}}
